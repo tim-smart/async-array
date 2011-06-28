@@ -174,7 +174,10 @@ Operation.prototype.filterSerial = function (callback) {
 /**
  * Starts the operation
  */
-Operation.prototype.exec = function () {
+Operation.prototype.exec = function (callback) {
+  if (callback) {
+    this.done(callback)
+  }
   var state = new OperState(this)
   this.steps[0].run(state, this.array)
   return this

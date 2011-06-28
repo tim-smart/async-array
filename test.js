@@ -29,10 +29,9 @@ items
       next(null, true)
     }, 1000)
   }) 
-  .done(function (error, results) {
+  .exec(function (error, results) {
     console.log('filter', results)
   })
-  .exec()
 
 items
   .forEachSerial(function (item, i, next) {
@@ -42,3 +41,31 @@ items
     }, 1000)
   })
   .exec()
+
+items
+  .map(function (item, i, next) {
+    if ('string' === typeof item) {
+      return next(new Error('stupid'))
+    }
+    next(null, item)
+  })
+  .exec(function (error) {
+    console.log('error', error)
+  })
+
+items
+  .filter(function (item, i, next) {
+    if ('string' === typeof item) {
+      return next()
+    }
+    next(null, true)
+  })
+  .done(function (error, results) {
+    console.log('chain filter', results)
+  })
+  .map(function (item, i, next) {
+    next(null, 'item ' + i + ': ' + item)
+  })
+  .exec(function (error, results) {
+    console.log('chain map', results)
+  })
