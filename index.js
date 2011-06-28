@@ -270,6 +270,10 @@ Step.prototype.run = function (oper_state, array) {
   var step  = this
     , state = new StepState(this, oper_state, array, [])
 
+  if (array.length === 0) {
+    return this.done(null, state)
+  }
+
   if (this.serial) {
     state.serialfn = function (error, data) {
       step.next(state, state.count, error, data)
