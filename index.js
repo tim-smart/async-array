@@ -29,14 +29,18 @@
  * @param @optional {Array} arr : Base elements.
  */
 function AsyncArray (arr) {
-  Array.call(this)
-
-  if (arr) {
-    this.push.apply(this, arr)
-  }
+  arr || (arr = [])
+  arr.__proto__ = this.__proto__
+  return arr
 }
 
 AsyncArray.prototype.__proto__ = Array.prototype
+
+// Alternative generator
+AsyncArray.async = function (array) {
+  array.__proto__ = AsyncArray.prototype
+  return array
+}
 
 // Export
 module.exports = AsyncArray
@@ -255,7 +259,7 @@ Step.prototype.next = function (state, i, error, data) {
  * @param {StepState} state
  */
 Step.prototype.done = function (error, state) {
-  state.result = new AsyncArray(state.result)
+  AsyncArray.async(state.result)
 
   for (var i = 0, il = this.callbacks.length; i < il; i++) {
     this.callbacks[i].call(this.oper, error, state.result)
