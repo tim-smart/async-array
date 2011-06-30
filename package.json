@@ -1,7 +1,7 @@
 { "name"        : "async-array"
 , "description" : "A sane control flow library"
 , "keywords"    : ["control", "flow", "async", "array"]
-, "version"     : "0.1.3"
+, "version"     : "0.1.4"
 , "author"      : "Tim Smart"
 , "repository"  :
   { "type"      : "git"

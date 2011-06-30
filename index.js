@@ -45,6 +45,16 @@ AsyncArray.async = function (array) {
 // Export
 module.exports = AsyncArray
 
+/**
+ * Convert back to a normal array.
+ *
+ * @return {Array}
+ */
+AsyncArray.prototype.array = function () {
+  this.__proto__ = Array.prototype
+  return this
+}
+
 // Proxy methods to operations.
 AsyncArray.prototype.forEach = function (callback) {
   return new Operation(this).forEach(callback)
@@ -73,6 +83,7 @@ AsyncArray.prototype.filterSerial = function (callback) {
  * @constructor
  * @param {AsyncArray} array
  */
+
 function Operation (array) {
   this.array = array
   this.steps = []
