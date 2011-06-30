@@ -68,4 +68,6 @@ items
   })
   .exec(function (error, results) {
     console.log('chain map', results)
+    results.array()
+    console.log('normal array', 'undefined' === typeof results.array)
   })
