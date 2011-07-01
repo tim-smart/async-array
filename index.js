@@ -351,7 +351,7 @@ ForEach.prototype.__proto__ = Step.prototype
  */
 ForEach.prototype.next = function (state, i, error, data) {
   if ('undefined' !== typeof data) {
-    this.result.push(data)
+    state.result.push(data)
   }
 
   Step.prototype.next.call(this, state, i, error, data)
