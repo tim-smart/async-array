@@ -132,7 +132,7 @@ Operation.prototype.done = function (callback) {
  * @param {Function} callback
  */
 Operation.prototype.forEach = function (callback) {
-  this.steps.push(new Step(this, callback))
+  this.steps.push(new ForEach(this, callback))
   return this
 }
 
@@ -142,7 +142,7 @@ Operation.prototype.forEach = function (callback) {
  * @param {Function} callback
  */
 Operation.prototype.forEachSerial = function (callback) {
-  this.steps.push(new Step(this, callback, true))
+  this.steps.push(new ForEach(this, callback, true))
   return this
 }
 
@@ -324,6 +324,37 @@ function StepState (step, oper_state, array, result) {
   this.count      = 0
   this.done       = false
   this.serialfn   = null
+}
+
+// --------------------
+
+/**
+ * A forEach step
+ *
+ * @constructor
+ * @extends {Step}
+ * @param {Operation} oper
+ * @param {Function} callback
+ */
+function ForEach (oper, callback, serial) {
+  Step.call(this, oper, callback, serial)
+}
+
+// Inherit Step
+ForEach.prototype.__proto__ = Step.prototype
+
+/**
+ * Called when a iteration is done.
+ *
+ * @param {Error} error
+ * @param @optional {Mixed} result
+ */
+ForEach.prototype.next = function (state, i, error, data) {
+  if ('undefined' !== typeof data) {
+    this.result.push(data)
+  }
+
+  Step.prototype.next.call(this, state, i, error, data)
 }
 
 // --------------------
