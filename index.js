@@ -83,7 +83,6 @@ AsyncArray.prototype.filterSerial = function (callback) {
  * @constructor
  * @param {AsyncArray} array
  */
-
 function Operation (array) {
   this.array = array
   this.steps = []
@@ -355,6 +354,20 @@ ForEach.prototype.next = function (state, i, error, data) {
   }
 
   Step.prototype.next.call(this, state, i, error, data)
+}
+
+/**
+ * When the step is done
+ *
+ * @param {Error} error
+ * @param {StepState} state
+ */
+ForEach.prototype.done = function (error, state) {
+  if (0 === state.result.length) {
+    state.result = state.array
+  }
+
+  Step.prototype.done.call(this, error, state)
 }
 
 // --------------------
