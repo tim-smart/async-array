@@ -36,14 +36,15 @@ function AsyncArray (arr) {
 
 AsyncArray.prototype.__proto__ = Array.prototype
 
-// Alternative generator
-AsyncArray.async = function (array) {
+// Export
+module.exports = function async (array) {
+  array || (array = [])
   array.__proto__ = AsyncArray.prototype
   return array
 }
 
-// Export
-module.exports = AsyncArray
+// Backward compatability
+module.exports.async = module.exports
 
 /**
  * Convert back to a normal array.
@@ -87,6 +88,9 @@ function Operation (array) {
   this.array = array
   this.steps = []
 }
+
+// Export op
+module.exports.Operation = Operation
 
 /**
  * Get the last added step
@@ -197,6 +201,22 @@ Operation.prototype.exec = function (callback) {
   return this
 }
 
+/**
+ * Save an operation into a function.
+ *
+ * The function created will work like: myoper([1, 2, 3], callback)
+ */
+Operation.prototype.save = function save () {
+  var steps = this.steps
+
+  return function asyncop (arr, done) {
+    arr        = module.exports(arr)
+    var oper   = new Operation(arr)
+    oper.steps = steps
+    return oper.exec(done)
+  }
+}
+
 // --------------------
 
 /**
@@ -269,7 +289,7 @@ Step.prototype.next = function (state, i, error, data) {
  * @param {StepState} state
  */
 Step.prototype.done = function (error, state) {
-  AsyncArray.async(state.result)
+  module.exports(state.result)
 
   for (var i = 0, il = this.callbacks.length; i < il; i++) {
     this.callbacks[i].call(this.oper, error, state.result)

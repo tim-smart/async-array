@@ -71,3 +71,14 @@ items
     results.array()
     console.log('normal array', 'undefined' === typeof results.array)
   })
+
+var op = new AsyncArray.Operation;
+op.forEachSerial(function foreach (item, i, next) {
+  console.log('forEachSaved', i)
+  next()
+})
+op = op.save()
+
+op([1, 2, 3], function (err) {
+  console.log('forEachSaved', 'done')
+})
